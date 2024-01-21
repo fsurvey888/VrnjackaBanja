@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-measure.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-measure.js"></script>
+        <script src="data/Povrsine_1.js"></script>
+        <script src="data/Izvori_2.js"></script>
+        <script src="data/Br_Odjela_3.js"></script>
+        <script src="data/Gr_poseda_4.js"></script>
+        <script src="data/GraGJ_5.js"></script>
+        <script src="data/Gr_odjela_6.js"></script>
+        <script src="data/Vodotoci_7.js"></script>
+        <script src="data/Putevi_8.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+
+            if (e.target.feature.geometry.type === 'LineString') {
+              highlightLayer.setStyle({
+                color: '#ffff00',
+              });
+            } else {
+              highlightLayer.setStyle({
+                fillColor: '#ffff00',
+                fillOpacity: 1
+              });
+            }
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[43.504814988526746,20.678400213850765],[43.66604722914122,21.006774349089866]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var measureControl = new L.Control.Measure({
+            position: 'topleft',
+            primaryLengthUnit: 'meters',
+            secondaryLengthUnit: 'kilometers',
+            primaryAreaUnit: 'sqmeters',
+            secondaryAreaUnit: 'hectares'
+        });
+        measureControl.addTo(map);
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .innerHTML = '';
+        document.getElementsByClassName('leaflet-control-measure-toggle')[0]
+        .className += ' fas fa-ruler';
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_GoogleRoad_0');
+        map.getPane('pane_GoogleRoad_0').style.zIndex = 400;
+        var layer_GoogleRoad_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleRoad_0',
+            opacity: 1.0,
+            attribution: '<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_GoogleRoad_0;
+        map.addLayer(layer_GoogleRoad_0);
+        function pop_Povrsine_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">ha</th>\
+                        <td>' + (feature.properties['ha'] !== null ? autolinker.link(feature.properties['ha'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GKL</th>\
+                        <td>' + (feature.properties['GKL'] !== null ? autolinker.link(feature.properties['GKL'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Zapremina</th>\
+                        <td>' + (feature.properties['Zapremina'] !== null ? autolinker.link(feature.properties['Zapremina'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Prinos</th>\
+                        <td>' + (feature.properties['Prinos'] !== null ? autolinker.link(feature.properties['Prinos'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Ukupna_z</th>\
+                        <td>' + (feature.properties['Ukupna_z'] !== null ? autolinker.link(feature.properties['Ukupna_z'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Intenzitet</th>\
+                        <td>' + (feature.properties['Intenzitet'] !== null ? autolinker.link(feature.properties['Intenzitet'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Z_Tip</th>\
+                        <td>' + (feature.properties['Z_Tip'] !== null ? autolinker.link(feature.properties['Z_Tip'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GJ_Naziv</th>\
+                        <td>' + (feature.properties['GJ_Naziv'] !== null ? autolinker.link(feature.properties['GJ_Naziv'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Nagib</th>\
+                        <td>' + (feature.properties['Nagib'] !== null ? autolinker.link(feature.properties['Nagib'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">3dPovrsina</th>\
+                        <td>' + (feature.properties['3dPovrsina'] !== null ? autolinker.link(feature.properties['3dPovrsina'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">ekspoz</th>\
+                        <td>' + (feature.properties['ekspoz'] !== null ? autolinker.link(feature.properties['ekspoz'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">m_ha_vode</th>\
+                        <td>' + (feature.properties['m_ha_vode'] !== null ? autolinker.link(feature.properties['m_ha_vode'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Etat</th>\
+                        <td>' + (feature.properties['Etat'] !== null ? autolinker.link(feature.properties['Etat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">OpisCir</th>\
+                        <td>' + (feature.properties['OpisCir'] !== null ? autolinker.link(feature.properties['OpisCir'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">OpisLat</th>\
+                        <td>' + (feature.properties['OpisLat'] !== null ? autolinker.link(feature.properties['OpisLat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Vlaka_m_ha</th>\
+                        <td>' + (feature.properties['Vlaka_m_ha'] !== null ? autolinker.link(feature.properties['Vlaka_m_ha'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">OdjOds</th>\
+                        <td>' + (feature.properties['OdjOds'] !== null ? autolinker.link(feature.properties['OdjOds'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['odsek'] !== null ? autolinker.link(feature.properties['odsek'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Povrsine_1_0(feature) {
+            if (feature.properties['Prinos'] >= 0.000000 && feature.properties['Prinos'] <= 20.000000 ) {
+                return {
+                pane: 'pane_Povrsine_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(215,25,28,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Prinos'] >= 20.000000 && feature.properties['Prinos'] <= 40.000000 ) {
+                return {
+                pane: 'pane_Povrsine_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(253,174,97,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Prinos'] >= 40.000000 && feature.properties['Prinos'] <= 60.000000 ) {
+                return {
+                pane: 'pane_Povrsine_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,192,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Prinos'] >= 60.000000 && feature.properties['Prinos'] <= 80.000000 ) {
+                return {
+                pane: 'pane_Povrsine_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(166,217,106,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Prinos'] >= 80.000000 && feature.properties['Prinos'] <= 1044.830000 ) {
+                return {
+                pane: 'pane_Povrsine_1',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(26,150,65,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_Povrsine_1');
+        map.getPane('pane_Povrsine_1').style.zIndex = 401;
+        map.getPane('pane_Povrsine_1').style['mix-blend-mode'] = 'normal';
+        var layer_Povrsine_1 = new L.geoJson(json_Povrsine_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Povrsine_1',
+            layerName: 'layer_Povrsine_1',
+            pane: 'pane_Povrsine_1',
+            onEachFeature: pop_Povrsine_1,
+            style: style_Povrsine_1_0,
+        });
+        bounds_group.addLayer(layer_Povrsine_1);
+        map.addLayer(layer_Povrsine_1);
+        function pop_Izvori_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['fid'] !== null ? autolinker.link(feature.properties['fid'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['cngmeters'] !== null ? autolinker.link(feature.properties['cngmeters'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ringId'] !== null ? autolinker.link(feature.properties['ringId'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['distance'] !== null ? autolinker.link(feature.properties['distance'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Izvori_2_0(feature) {
+            if (feature.properties['distance'] >= 0.000000 && feature.properties['distance'] <= 50.000000 ) {
+                return {
+                pane: 'pane_Izvori_2',
+                opacity: 1,
+                color: 'rgba(19,149,255,0.82)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(21,0,254,0.82)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['distance'] >= 50.000000 && feature.properties['distance'] <= 100.000000 ) {
+                return {
+                pane: 'pane_Izvori_2',
+                opacity: 1,
+                color: 'rgba(19,149,255,0.82)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(115,178,216,0.82)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['distance'] >= 100.000000 && feature.properties['distance'] <= 150.000000 ) {
+                return {
+                pane: 'pane_Izvori_2',
+                opacity: 1,
+                color: 'rgba(19,149,255,0.82)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(203,229,255,0.82)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_Izvori_2');
+        map.getPane('pane_Izvori_2').style.zIndex = 402;
+        map.getPane('pane_Izvori_2').style['mix-blend-mode'] = 'normal';
+        var layer_Izvori_2 = new L.geoJson(json_Izvori_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Izvori_2',
+            layerName: 'layer_Izvori_2',
+            pane: 'pane_Izvori_2',
+            onEachFeature: pop_Izvori_2,
+            style: style_Izvori_2_0,
+        });
+        bounds_group.addLayer(layer_Izvori_2);
+        map.addLayer(layer_Izvori_2);
+        function pop_Br_Odjela_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ODELJENJE'] !== null ? autolinker.link(feature.properties['ODELJENJE'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ODSECI'] !== null ? autolinker.link(feature.properties['ODSECI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['P'] !== null ? autolinker.link(feature.properties['P'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GIS_ODSEK'] !== null ? autolinker.link(feature.properties['GIS_ODSEK'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GJ'] !== null ? autolinker.link(feature.properties['GJ'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ODELENJE_G'] !== null ? autolinker.link(feature.properties['ODELENJE_G'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ODSEK_G'] !== null ? autolinker.link(feature.properties['ODSEK_G'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ha'] !== null ? autolinker.link(feature.properties['ha'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Gazdinsk'] !== null ? autolinker.link(feature.properties['Z_Gazdinsk'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Vrsta_se'] !== null ? autolinker.link(feature.properties['Z_Vrsta_se'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Zapremin'] !== null ? autolinker.link(feature.properties['Z_Zapremin'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Prirast'] !== null ? autolinker.link(feature.properties['Z_Prirast'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Prinos_P'] !== null ? autolinker.link(feature.properties['Z_Prinos_P'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Na_celoj'] !== null ? autolinker.link(feature.properties['Z_Na_celoj'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Intenzit'] !== null ? autolinker.link(feature.properties['Z_Intenzit'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Z_Tip'] !== null ? autolinker.link(feature.properties['Z_Tip'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GJ_Naziv'] !== null ? autolinker.link(feature.properties['GJ_Naziv'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AVG_ELEV_M'] !== null ? autolinker.link(feature.properties['AVG_ELEV_M'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MODE_ELE_M'] !== null ? autolinker.link(feature.properties['MODE_ELE_M'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MAX_SLOPE_'] !== null ? autolinker.link(feature.properties['MAX_SLOPE_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MAX_SLOPE1'] !== null ? autolinker.link(feature.properties['MAX_SLOPE1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AVG_SLOPE_'] !== null ? autolinker.link(feature.properties['AVG_SLOPE_'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AVG_SLOPE1'] !== null ? autolinker.link(feature.properties['AVG_SLOPE1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SURFACE_AR'] !== null ? autolinker.link(feature.properties['SURFACE_AR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SLOPE_MEDI'] !== null ? autolinker.link(feature.properties['SLOPE_MEDI'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['SLOPE_MED1'] !== null ? autolinker.link(feature.properties['SLOPE_MED1'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ASPECT'] !== null ? autolinker.link(feature.properties['ASPECT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['AVG_ASPECT'] !== null ? autolinker.link(feature.properties['AVG_ASPECT'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ekspoz'] !== null ? autolinker.link(feature.properties['ekspoz'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Br_Odjela_3_0() {
+            return {
+                fill: false,
+                stroke: false,
+                interactive: false
+            }
+        }
+        map.createPane('pane_Br_Odjela_3');
+        map.getPane('pane_Br_Odjela_3').style.zIndex = 403;
+        map.getPane('pane_Br_Odjela_3').style['mix-blend-mode'] = 'normal';
+        var layer_Br_Odjela_3 = new L.geoJson(json_Br_Odjela_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Br_Odjela_3',
+            layerName: 'layer_Br_Odjela_3',
+            pane: 'pane_Br_Odjela_3',
+            onEachFeature: pop_Br_Odjela_3,
+            style: style_Br_Odjela_3_0,
+        });
+        bounds_group.addLayer(layer_Br_Odjela_3);
+        map.addLayer(layer_Br_Odjela_3);
+        function pop_Gr_poseda_4(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GJ'] !== null ? autolinker.link(feature.properties['GJ'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['cir'] !== null ? autolinker.link(feature.properties['cir'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Slika'] !== null ? autolinker.link(feature.properties['Slika'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Gr_poseda_4_0() {
+            return {
+                pane: 'pane_Gr_poseda_4',
+                opacity: 1,
+                color: 'rgba(255,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(48,18,59,0.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Gr_poseda_4');
+        map.getPane('pane_Gr_poseda_4').style.zIndex = 404;
+        map.getPane('pane_Gr_poseda_4').style['mix-blend-mode'] = 'multiply';
+        var layer_Gr_poseda_4 = new L.geoJson(json_Gr_poseda_4, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Gr_poseda_4',
+            layerName: 'layer_Gr_poseda_4',
+            pane: 'pane_Gr_poseda_4',
+            onEachFeature: pop_Gr_poseda_4,
+            style: style_Gr_poseda_4_0,
+        });
+        bounds_group.addLayer(layer_Gr_poseda_4);
+        function pop_GraGJ_5(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['GJ'] !== null ? autolinker.link(feature.properties['GJ'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">cir</th>\
+                        <td>' + (feature.properties['cir'] !== null ? autolinker.link(feature.properties['cir'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_GraGJ_5_0() {
+            return {
+                pane: 'pane_GraGJ_5',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '10,5,1,5',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 5.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_GraGJ_5');
+        map.getPane('pane_GraGJ_5').style.zIndex = 405;
+        map.getPane('pane_GraGJ_5').style['mix-blend-mode'] = 'normal';
+        var layer_GraGJ_5 = new L.geoJson(json_GraGJ_5, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_GraGJ_5',
+            layerName: 'layer_GraGJ_5',
+            pane: 'pane_GraGJ_5',
+            onEachFeature: pop_GraGJ_5,
+            style: style_GraGJ_5_0,
+        });
+        bounds_group.addLayer(layer_GraGJ_5);
+        function pop_Gr_odjela_6(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID'] !== null ? autolinker.link(feature.properties['FID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Gr_odjela_6_0() {
+            return {
+                pane: 'pane_Gr_odjela_6',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '10,5',
+                lineCap: 'round',
+                lineJoin: 'round',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Gr_odjela_6');
+        map.getPane('pane_Gr_odjela_6').style.zIndex = 406;
+        map.getPane('pane_Gr_odjela_6').style['mix-blend-mode'] = 'normal';
+        var layer_Gr_odjela_6 = new L.geoJson(json_Gr_odjela_6, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Gr_odjela_6',
+            layerName: 'layer_Gr_odjela_6',
+            pane: 'pane_Gr_odjela_6',
+            onEachFeature: pop_Gr_odjela_6,
+            style: style_Gr_odjela_6_0,
+        });
+        bounds_group.addLayer(layer_Gr_odjela_6);
+        map.addLayer(layer_Gr_odjela_6);
+        function pop_Vodotoci_7(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['NAZIV'] !== null ? autolinker.link(feature.properties['NAZIV'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? autolinker.link(feature.properties['Shape_Leng'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['id'] !== null ? autolinker.link(feature.properties['id'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Ciril'] !== null ? autolinker.link(feature.properties['Ciril'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Vodotoci_7_0() {
+            return {
+                pane: 'pane_Vodotoci_7',
+                interactive: true,
+            }
+        }
+        function style_Vodotoci_7_1() {
+            return {
+                pane: 'pane_Vodotoci_7',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_Vodotoci_7');
+        map.getPane('pane_Vodotoci_7').style.zIndex = 407;
+        map.getPane('pane_Vodotoci_7').style['mix-blend-mode'] = 'normal';
+        var layer_Vodotoci_7 = new L.geoJson.multiStyle(json_Vodotoci_7, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Vodotoci_7',
+            layerName: 'layer_Vodotoci_7',
+            pane: 'pane_Vodotoci_7',
+            onEachFeature: pop_Vodotoci_7,
+            styles: [style_Vodotoci_7_0,style_Vodotoci_7_1,]
+        });
+        bounds_group.addLayer(layer_Vodotoci_7);
+        map.addLayer(layer_Vodotoci_7);
+        function pop_Putevi_8(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['FID'] !== null ? autolinker.link(feature.properties['FID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>Kategorija</strong><br />' + (feature.properties['Kategorija'] !== null ? autolinker.link(feature.properties['Kategorija'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>m</strong><br />' + (feature.properties['m'] !== null ? autolinker.link(feature.properties['m'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>kat</strong><br />' + (feature.properties['kat'] !== null ? autolinker.link(feature.properties['kat'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['prioritet'] !== null ? autolinker.link(feature.properties['prioritet'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Putevi_8_0(feature) {
+            switch(String(feature.properties['Kategorija'])) {
+                case '1':
+                    return {
+                pane: 'pane_Putevi_8',
+                opacity: 1,
+                color: 'rgba(81,48,17,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 6.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case '2':
+                    return {
+                pane: 'pane_Putevi_8',
+                opacity: 1,
+                color: 'rgba(255,127,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+                case '3':
+                    return {
+                pane: 'pane_Putevi_8',
+                opacity: 1,
+                color: 'rgba(255,203,203,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 4.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Putevi_8');
+        map.getPane('pane_Putevi_8').style.zIndex = 408;
+        map.getPane('pane_Putevi_8').style['mix-blend-mode'] = 'normal';
+        var layer_Putevi_8 = new L.geoJson(json_Putevi_8, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Putevi_8',
+            layerName: 'layer_Putevi_8',
+            pane: 'pane_Putevi_8',
+            onEachFeature: pop_Putevi_8,
+            style: style_Putevi_8_0,
+        });
+        bounds_group.addLayer(layer_Putevi_8);
+        map.addLayer(layer_Putevi_8);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Putevi<br /><table><tr><td style="text-align: center;"><img src="legend/Putevi_8_Javni0.png" /></td><td>Javni</td></tr><tr><td style="text-align: center;"><img src="legend/Putevi_8_Makadamski1.png" /></td><td>Makadamski</td></tr><tr><td style="text-align: center;"><img src="legend/Putevi_8_Sezonski2.png" /></td><td>Sezonski</td></tr></table>': layer_Putevi_8,'<img src="legend/Vodotoci_7.png" /> Vodotoci': layer_Vodotoci_7,'<img src="legend/Gr_odjela_6.png" /> Gr_odjela': layer_Gr_odjela_6,'<img src="legend/GraGJ_5.png" /> GraGJ': layer_GraGJ_5,'<img src="legend/Gr_poseda_4.png" /> Gr_poseda': layer_Gr_poseda_4,'': layer_Br_Odjela_3,'Izvori<br /><table><tr><td style="text-align: center;"><img src="legend/Izvori_2_0500.png" /></td><td>0 - 50</td></tr><tr><td style="text-align: center;"><img src="legend/Izvori_2_501001.png" /></td><td>50 - 100</td></tr><tr><td style="text-align: center;"><img src="legend/Izvori_2_1001502.png" /></td><td>100 - 150</td></tr></table>': layer_Izvori_2,'Povrsine<br /><table><tr><td style="text-align: center;"><img src="legend/Povrsine_1_0200.png" /></td><td>0 - 20</td></tr><tr><td style="text-align: center;"><img src="legend/Povrsine_1_20401.png" /></td><td>20 - 40</td></tr><tr><td style="text-align: center;"><img src="legend/Povrsine_1_40602.png" /></td><td>40 - 60</td></tr><tr><td style="text-align: center;"><img src="legend/Povrsine_1_60803.png" /></td><td>60 - 80</td></tr><tr><td style="text-align: center;"><img src="legend/Povrsine_1_804.png" /></td><td>>80</td></tr></table>': layer_Povrsine_1,"Google Road": layer_GoogleRoad_0,}).addTo(map);L.control.scale({position: 'bottomleft', maxWidth: 100, metric: true, imperial: false, updateWhenIdle: false}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_Povrsine_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['odsek'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['odsek']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Povrsine_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Br_Odjela_3.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['ODELENJE_G'] !== null?String('<div style="color: #323232; font-size: 14pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['ODELENJE_G']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Br_Odjela_3'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        var i = 0;
+        layer_Vodotoci_7.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['Ciril'] !== null?String('<div style="color: #1f78b4; font-size: 14pt; font-weight: bold; font-style: italic; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['Ciril']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_Vodotoci_7'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_Povrsine_1,layer_Br_Odjela_3,layer_Vodotoci_7]);
+        map.on("zoomend", function(){
+            resetLabels([layer_Povrsine_1,layer_Br_Odjela_3,layer_Vodotoci_7]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_Povrsine_1,layer_Br_Odjela_3,layer_Vodotoci_7]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_Povrsine_1,layer_Br_Odjela_3,layer_Vodotoci_7]);
+        });
+        </script>
+    </body>
+</html>
